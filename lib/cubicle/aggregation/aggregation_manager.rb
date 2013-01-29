@@ -131,8 +131,9 @@ module Cubicle
 
         #A bug, possibly in Mongo, does not produce a count on MR collections
         #sometimes, so we'll just add it from the result.
-        output = database[result["result"]]
-        output.instance_eval "def count; #{result["counts"]["output"]}; end"
+        output = result["result"]
+        output = database[output] if options[:out] and output
+        output.instance_eval "def count; #{result["counts"]["output"]}; end" if output
         output
       end
 
@@ -246,16 +247,19 @@ module Cubicle
       #method, but instead of returning the resulting collection,
       #I'm returning the full 'results' so that I can capture
       #the delicious stats contained within its delicate hash shell
-      def map_reduce(source_collection_name,map, reduce, opts={})
-
+      def map_reduce(source_collection_name, map, reduce, opts={})
         map    = BSON::Code.new(map) unless map.is_a?(BSON::Code)
         reduce = BSON::Code.new(reduce) unless reduce.is_a?(BSON::Code)
 
         hash = BSON::OrderedHash.new
-        hash['mapreduce'] = source_collection_name
+        hash['mapReduce'] = source_collection_name
         hash['map'] = map
         hash['reduce'] = reduce
+				hash['out'] = {'inline'=>1}
         hash.merge! opts
+        if fin = hash['finalize']
+          hash['finalize'] = BSON::Code.new(fin) unless fin.is_a?(BSON::Code)
+        end
 
         result = database.command(hash)
         unless result["ok"] == 1

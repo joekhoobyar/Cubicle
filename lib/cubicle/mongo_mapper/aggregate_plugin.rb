@@ -1,7 +1,7 @@
 module Cubicle
   module MongoMapper
     module AggregatePlugin
-			if MongoMapper::Document.respond_to? :append_inclusions
+			if ::MongoMapper::Document.respond_to? :append_inclusions
 				def self.included(model)
 					model.plugin AggregatePlugin
 				end

@@ -248,18 +248,12 @@ module Cubicle
       #I'm returning the full 'results' so that I can capture
       #the delicious stats contained within its delicate hash shell
       def map_reduce(source_collection_name, map, reduce, opts={})
-        map    = BSON::Code.new(map) unless map.is_a?(BSON::Code)
-        reduce = BSON::Code.new(reduce) unless reduce.is_a?(BSON::Code)
-
-        hash = BSON::OrderedHash.new
-        hash['mapReduce'] = source_collection_name
-        hash['map'] = map
-        hash['reduce'] = reduce
-				hash['out'] = {'inline'=>1}
-        hash.merge! opts
+        hash = ActiveSupport::OrderedHash.new( 'mapReduce'=>source_collection_name,
+			          'map'=>wrap_code(map), 'reduce'=>wrap_code(reduce), 'out'=>{'inline'=>1} )
         if fin = hash['finalize']
-          hash['finalize'] = BSON::Code.new(fin) unless fin.is_a?(BSON::Code)
+	        hash['finalize'] = wrap_code(fin)
         end
+        hash.merge! opts
 
         result = database.command(hash)
         unless result["ok"] == 1

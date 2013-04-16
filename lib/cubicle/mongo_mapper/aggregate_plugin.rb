@@ -1,13 +1,13 @@
 module Cubicle
-  module MongoMapper
+  module Mongoid
     module AggregatePlugin
-			if ::MongoMapper::Document.respond_to? :append_inclusions
-				def self.included(model)
-					model.plugin AggregatePlugin
-				end
-			else
-				extend ActiveSupport::Concern
-			end
+      if ::Mongoid::Document.respond_to? :append_inclusions
+        def self.included(model)
+          model.plugin AggregatePlugin
+        end
+      else
+        extend ActiveSupport::Concern
+      end
 
       module ClassMethods
         def aggregate(&block)
@@ -18,8 +18,8 @@ module Cubicle
   end
 end
 
-if MongoMapper::Document.respond_to? :append_inclusions
-	MongoMapper::Document.append_inclusions(Cubicle::MongoMapper::AggregatePlugin)
+if Mongoid::Document.respond_to? :append_inclusions
+  Mongoid::Document.append_inclusions(Cubicle::Mongoid::AggregatePlugin)
 else
-	MongoMapper::Document.plugin(Cubicle::MongoMapper::AggregatePlugin)
+  Mongoid::Document.plugin(Cubicle::Mongoid::AggregatePlugin)
 end

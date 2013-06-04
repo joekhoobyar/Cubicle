@@ -263,6 +263,15 @@ module Cubicle
         result
       end
 
+    private
+      def wrap_code(*blurbs)
+        blurbs.map{|blurb| wrap_code?(blurb) ? Moped::BSON::Code.new(blurb) : blurb }
+      end
+        
+      def wrap_code?(blurb)
+        ! (blurb.blank? or blurb.is_a?(::Moped::BSON::Code))
+      end
+
     end
   end
 end

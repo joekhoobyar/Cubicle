@@ -2,7 +2,7 @@ require "rubygems"
 require "active_support"
 require "active_support/core_ext"
 require "active_support/hash_with_indifferent_access" unless defined?(HashWithIndifferentAccess)
-require "mongo"
+require "mongoid"
 require "logger"
 require "mustache"
 require "time"

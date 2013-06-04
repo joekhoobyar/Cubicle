@@ -14,10 +14,11 @@ Gem::Specification.new do |s|
   s.files = Dir.glob("{lib,test}/**/*") + %w[LICENSE.txt README.rdoc]
 
   s.add_dependency('i18n')
-  s.add_dependency('activesupport', '>= 2.3')
+  s.add_dependency('activesupport', '>= 3.2')
   s.add_dependency('bson_ext', '>= 1.1.1')
   s.add_dependency('bson', '>= 1.1.1')
-  s.add_dependency('mongo', '>= 1.1.1')
+  s.add_dependency('mongoid', '~> 3.1')
+  s.add_dependency('moped', '~> 1.4')
   s.add_dependency('mustache', '>= 0.10.0')
 
   s.add_development_dependency 'rake'

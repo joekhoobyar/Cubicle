@@ -3,14 +3,6 @@ module Cubicle
     class MapReduceHelper
       class << self
         
-        def wrap_code(*blurbs)
-          blurbs.map{|blurb| wrap_code?(blurb) ? Moped::BSON::Code.new(blurb) : blurb }
-        end
-        
-        def wrap_code?(blurb)
-          ! (blurb.blank? or blurb.is_a?(::Moped::BSON::Code))
-        end
-
         def generate_keys_string(query)
           "{#{query.dimensions.map{|dim|dim.to_js_keys}.flatten.join(", ")}}"
         end
